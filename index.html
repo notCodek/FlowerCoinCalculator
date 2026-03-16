@@ -204,34 +204,47 @@
       color: #bbb;
     }
 
-    /* MOBILE RESPONSIVE */
+    /* MOBILE RESPONSIVE VERTICAL STACK */
     @media (max-width: 768px) {
+      .container {
+        flex-direction: column;   /* stack everything vertically */
+        align-items: center;
+      }
+
       .side {
-        display: none;           /* hide panels by default */
+        width: 90%;               /* full-width panels */
+        margin-top: 15px;         /* spacing between calc and panels */
       }
 
       .main {
         width: 100%;
       }
 
+      .side:nth-of-type(1) {
+        order: 2; /* LEFT panel goes below calc */
+      }
+
+      .side:nth-of-type(2) {
+        order: 3; /* RIGHT panel stays last */
+      }
+
       .calculator-wrapper {
         width: 90%;
       }
 
-      /* When toggled open (user clicks button) */
       .panel-content {
-        display: none;           /* default hidden */
-        font-size: 16px;         /* readable on mobile */
+        display: none;            /* panels collapsed by default */
+        font-size: 16px;
+        line-height: 1.4;
       }
 
       .toggle-btn {
-        padding: 16px;           /* still big enough to tap */
+        padding: 16px;
         font-size: 20px;
       }
 
       .notes-list, .note {
         font-size: 16px;
-        line-height: 1.4;
       }
     }
   </style>
@@ -323,9 +336,12 @@
   const futureValue = document.getElementById('futureValue');
   const resultDiv = document.getElementById('result');
 
-  // Defaults
-  standeesInput.value = 115;
-  coinsInput.value = 300;
+  // Load standee/coin count
+  const savedStandees = localStorage.getItem("standees");
+  const savedCoins = localStorage.getItem("coins");
+
+  standeesInput.value = savedStandees !== null ? Number(savedStandees) : 115;
+  coinsInput.value = savedCoins !== null ? Number(savedCoins) : 300;
 
   // Load slider persistence
   const savedFuture = localStorage.getItem("futureCoins");
@@ -396,8 +412,15 @@
     `;
   }
 
-  standeesInput.addEventListener("input", calculate);
-  coinsInput.addEventListener("input", calculate);
+  standeesInput.addEventListener("input", () => {
+    localStorage.setItem("standees", standeesInput.value);
+    calculate();
+  });
+
+  coinsInput.addEventListener("input", () => {
+    localStorage.setItem("coins", coinsInput.value);
+    calculate();
+  });
 
   futureInput.addEventListener("input", () => {
     futureValue.innerText = futureInput.value;
