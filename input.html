@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="coin.png">
+  <title>Flower Coin Calculator</title>
+  <style>
+    @font-face {
+      font-family: 'Wonder';
+      src: url('DIN 2014 Demi.ttf') format("truetype");
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Wonder';
+      background: url("background.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* CONTAINER LAYOUT */
+    .container {
+      display: flex;
+      justify-content: center; /* Centers main content */
+      align-items: flex-start;
+      gap: 10px;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* SIDE PANELS */
+    .side {
+      width: 270px;                     /* slightly wider for readability */
+      background: rgba(0, 0, 0, 0.90);  /* semi-transparent background */
+      padding: 30px;                    /* more padding for breathing room */
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;                        /* space between panel sections */
+    }
+
+    /* TOGGLE BUTTON */
+    .toggle-btn {
+      width: 100%;
+      padding: 18px;                    /* bigger height */
+      font-size: 22px;                  /* larger text */
+      background: rgba(0, 0, 0, 0.45);   /* see-through to panel background */
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+      font-weight: bold;
+    }
+
+    /* Optional hover effect */
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* PANEL CONTENT */
+    .panel-content {
+      margin-top: 15px;
+    }
+
+    /* NOTES / BULLETS */
+    .notes-list {
+      padding-left: 20px;
+      font-size: 18px;      /* increase font size */
+      line-height: 1.6;     /* more spacing between lines */
+      color: #ddd;
+    }
+
+    .notes-list li {
+      margin-bottom: 12px;  /* increase spacing for readability */
+    }
+
+    /* SMALL NOTES / EXTRA TEXT */
+    .note {
+      margin-top: 12px;
+      font-size: 16px;      /* bigger than before */
+      line-height: 1.5;
+      color: #ccc;
+    }
+
+    /* MAIN CALCULATOR */
+    .main {
+      flex: 1;
+      display: flex;
+      justify-content: center; /* Always center */
+      align-items: flex-start;
+    }
+
+    .calculator-wrapper {
+      background: rgba(0, 0, 0, 0.90);
+      padding: 25px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .calculator {
+      text-align: center;
+      width: 100%;
+    }
+
+    .logo {
+      width: 345px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      margin-bottom: 25px;
+      color: #bbb;
+    }
+
+    /* INPUTS */
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      color: #fff;
+      gap: 10px;
+    }
+
+    .input-group img {
+      width: 50px;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 6px;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .slider-label {
+      margin-top: 15px;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    /* RESULTS */
+    .result {
+      margin-top: 32px;
+      font-size: 30px;
+      line-height: 1.8;
+      color: #fff;
+    }
+
+    .result-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 2px 0;
+    }
+
+    .result-icon {
+      width: 125px;
+    }
+
+    .sugarstar-image {
+      width: 200px;
+      margin-top: 10px;
+    }
+
+    .big {
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .good { color: #4caf50; }
+    .mid { color: #ff9800; }
+    .bad { color: #f44336; }
+
+    /* NOTES / BULLETS */
+    .notes-list {
+      padding-left: 20px;
+      margin-top: 10px;
+      font-size: 23px;
+      color: #bbb;
+    }
+
+    .notes-list li {
+      margin-bottom: 8px;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 23px;
+      color: #bbb;
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 768px) {
+      .side {
+        display: none;           /* hide panels by default */
+      }
+
+      .main {
+        width: 100%;
+      }
+
+      .calculator-wrapper {
+        width: 90%;
+      }
+
+      /* When toggled open (user clicks button) */
+      .panel-content {
+        display: none;           /* default hidden */
+        font-size: 16px;         /* readable on mobile */
+      }
+
+      .toggle-btn {
+        padding: 16px;           /* still big enough to tap */
+        font-size: 20px;
+      }
+
+      .notes-list, .note {
+        font-size: 16px;
+        line-height: 1.4;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT PANEL -->
+  <div class="side">
+    <div class="panel">
+      <button class="toggle-btn" onclick="togglePanel('leftPanel')">
+        Coin Galore Locations/Priority
+      </button>
+
+      <div id="leftPanel" class="panel-content">
+        <ul class="notes-list">
+          <li>Petal Isles (Robbird Cove)</li>
+          <li>World 5 (Loyal Poplin House)</li>
+          <li>World 3 (Hoppycat Trial)</li>
+          <li>World 1 (Bulrush Coming Through!)</li>
+          <li>World 2 (Pokipede Pass)</li>
+          <li>World 6 (Observatory 1)</li>
+          <li>World 4 (Armads on the Roll)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CALCULATOR -->
+  <div class="main">
+    <div class="calculator-wrapper">
+      <div class="calculator">
+        <img src="wonder_logo.png" class="logo">
+        <h1>Flower Coin Calculator</h1>
+        <div class="subtitle">
+          Enter your Standee and Flower Coin count after Shop IV to see required Coin Galores!
+        </div>
+
+        <div class="input-group">
+          <img src="standee.png">
+          <input id="standees" type="number">
+        </div>
+
+        <div class="input-group">
+          <img src="coin.png">
+          <input id="coins" type="number">
+        </div>
+
+        <div class="slider-label">
+          Future Coins: <span id="futureValue"></span>
+        </div>
+        <input id="futureCoins" type="range" min="320" max="335">
+
+        <div class="result" id="result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="side">
+    <div class="panel">
+      <button class="toggle-btn" onclick="togglePanel('rightPanel')">
+        Notes
+      </button>
+
+      <div id="rightPanel" class="panel-content">
+        <ul class="notes-list">
+          <li>Adjust Future Coins for more safe or risky coin routing</li>
+          <li>30+ Spare Coins -> SKIP the Goomba Poplin NPC</li>
+          <li>If you only need 3 Coin Galores, warp to Hurry Hurry! for the World 1 Shop instead</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL_STANDEES = 144;
+  const STANDEE_COST = 30;
+  const COIN_GALORE = 54;
+  const MAX_GALORES = 7;
+
+  const standeesInput = document.getElementById('standees');
+  const coinsInput = document.getElementById('coins');
+  const futureInput = document.getElementById('futureCoins');
+  const futureValue = document.getElementById('futureValue');
+  const resultDiv = document.getElementById('result');
+
+  // Defaults
+  standeesInput.value = 115;
+  coinsInput.value = 300;
+
+  // Load slider persistence
+  const savedFuture = localStorage.getItem("futureCoins");
+  let initialFuture = savedFuture !== null ? Number(savedFuture) : 325;
+
+  futureInput.value = initialFuture;
+  futureValue.innerText = initialFuture;
+
+  function togglePanel(id) {
+    const panel = document.getElementById(id);
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+  }
+
+  function calculate() {
+    const standees = Number(standeesInput.value);
+    const coins = Number(coinsInput.value);
+    const futureCoins = Number(futureInput.value);
+
+    if (isNaN(standees) || isNaN(coins)) return;
+
+    if (standees < 0 || standees > TOTAL_STANDEES) {
+      resultDiv.innerText = `Standees must be between 0 and ${TOTAL_STANDEES}`;
+      return;
+    }
+
+    if (coins < 0 || coins > 999) {
+      resultDiv.innerText = "Coins must be between 0 and 999";
+      return;
+    }
+
+    const remaining = TOTAL_STANDEES - standees;
+    const coinsNeeded = remaining * STANDEE_COST;
+    const baseCoins = coins + futureCoins;
+
+    for (let g = 0; g <= MAX_GALORES; g++) {
+      const total = baseCoins + (g * COIN_GALORE);
+
+      if (total >= coinsNeeded) {
+        const spare = total - coinsNeeded;
+        let colorClass = g <= 4 ? "good" : "mid";
+
+        resultDiv.innerHTML = `
+          <div class="result-row big ${colorClass}">
+            <img src="coin_galore.png" class="result-icon">
+            Coin Galores: ${g}
+          </div>
+          <div class="result-row">
+            Spare Flower Coins: ${spare}
+          </div>
+          <div class="result-row">
+            Total Coins Needed: ${coinsNeeded}
+          </div>
+        `;
+        return;
+      }
+    }
+
+    // Sugarstar case
+    const maxPossible = baseCoins + (MAX_GALORES * COIN_GALORE);
+    const remainingCoins = coinsNeeded - maxPossible;
+
+    resultDiv.innerHTML = `
+      <div class="big bad" style="color: red;">
+        SUGARSTAR: ${remainingCoins}
+      </div>
+      <img src="sugarstar.png" class="sugarstar-image">
+      <div>Total Coins Needed: ${coinsNeeded}</div>
+    `;
+  }
+
+  standeesInput.addEventListener("input", calculate);
+  coinsInput.addEventListener("input", calculate);
+
+  futureInput.addEventListener("input", () => {
+    futureValue.innerText = futureInput.value;
+    localStorage.setItem("futureCoins", futureInput.value);
+    calculate();
+  });
+
+  calculate();
+</script>
+
+</body>
+</html>
